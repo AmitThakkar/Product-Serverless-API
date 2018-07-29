@@ -1,0 +1,17 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Parameters": {
+    "S3BucketName": {
+      "Type": "String",
+      "Description": "Bucket Name for Lambda Code src"
+    }
+  },
+  "Resources" : {
+    "S3Bucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": {"Ref" : "S3BucketName"}
+      }
+    }
+  }
+}

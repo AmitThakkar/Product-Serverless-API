@@ -1,0 +1,95 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Resources" : {
+    "ClassicPetite28" : {
+      "Type" : "AWS::DynamoDB::Table",
+      "Properties" : {
+        "TableName" : "ClassicPetite28",
+        "KeySchema" : [
+          {
+            "AttributeName" : "id",
+            "KeyType" : "HASH"
+          },
+          {
+            "AttributeName" : "name",
+            "KeyType" : "RANGE"
+          }
+        ],
+        "AttributeDefinitions" : [
+          {
+            "AttributeName" : "id",
+            "AttributeType" : "S"
+          },
+          {
+            "AttributeName" : "name",
+            "AttributeType" : "S"
+          }
+        ],
+        "ProvisionedThroughput" : {
+          "ReadCapacityUnits" : "5",
+          "WriteCapacityUnits" : "5"
+        }
+      }
+    },
+    "ClassicPetite32" : {
+      "Type" : "AWS::DynamoDB::Table",
+      "Properties" : {
+        "TableName" : "ClassicPetite32",
+        "KeySchema" : [
+          {
+            "AttributeName" : "id",
+            "KeyType" : "HASH"
+          },
+          {
+            "AttributeName" : "name",
+            "KeyType" : "RANGE"
+          }
+        ],
+        "AttributeDefinitions" : [
+          {
+            "AttributeName" : "id",
+            "AttributeType" : "S"
+          },
+          {
+            "AttributeName" : "name",
+            "AttributeType" : "S"
+          }
+        ],
+        "ProvisionedThroughput" : {
+          "ReadCapacityUnits" : "5",
+          "WriteCapacityUnits" : "5"
+        }
+      }
+    },
+    "Dapper38" : {
+      "Type" : "AWS::DynamoDB::Table",
+      "Properties" : {
+        "TableName" : "Dapper38",
+        "KeySchema" : [
+          {
+            "AttributeName" : "id",
+            "KeyType" : "HASH"
+          },
+          {
+            "AttributeName" : "name",
+            "KeyType" : "RANGE"
+          }
+        ],
+        "AttributeDefinitions" : [
+          {
+            "AttributeName" : "id",
+            "AttributeType" : "S"
+          },
+          {
+            "AttributeName" : "name",
+            "AttributeType" : "S"
+          }
+        ],
+        "ProvisionedThroughput" : {
+          "ReadCapacityUnits" : "5",
+          "WriteCapacityUnits" : "5"
+        }
+      }
+    }
+  }
+}

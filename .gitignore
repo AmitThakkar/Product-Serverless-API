@@ -4,3 +4,9 @@
 .idea/
 *ipr
 *.iml
+
+###########################
+#NPM Files
+###########################
+node_modules/
+package-lock.json

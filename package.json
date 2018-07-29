@@ -1,0 +1,30 @@
+{
+  "name": "product-serverless-api",
+  "version": "0.0.1",
+  "description": "\u0016This is a serverless sample application for Product Collection API. I am using AWS as a cloud provider for this.",
+  "main": "deploy.sh",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmitThakkar/Product-Serverless-API.git"
+  },
+  "keywords": [
+    "AWS",
+    "ServerLess",
+    "NodeJS",
+    "Lambda",
+    "API-Gateway",
+    "CloudFormation"
+  ],
+  "author": "AmitThakkar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AmitThakkar/Product-Serverless-API/issues"
+  },
+  "homepage": "https://github.com/AmitThakkar/Product-Serverless-API#readme",
+  "dependencies": {
+    "aws-sdk": "^2.282.1"
+  }
+}

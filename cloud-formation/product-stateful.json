@@ -4,6 +4,10 @@
     "S3BucketName": {
       "Type": "String",
       "Description": "Bucket Name for Lambda Code"
+    },
+    "TableName": {
+      "Type": "String",
+      "Description": "Table Name for DyanmoDB Table"
     }
   },
   "Resources" : {
@@ -13,17 +17,17 @@
         "BucketName": {"Ref" : "S3BucketName"}
       }
     },
-    "ClassicPetite28" : {
+    "Products" : {
       "Type" : "AWS::DynamoDB::Table",
       "Properties" : {
-        "TableName" : "ClassicPetite28",
+        "TableName" : {"Ref": "TableName"},
         "KeySchema" : [
           {
             "AttributeName" : "id",
             "KeyType" : "HASH"
           },
           {
-            "AttributeName" : "name",
+            "AttributeName" : "collection",
             "KeyType" : "RANGE"
           }
         ],
@@ -33,67 +37,7 @@
             "AttributeType" : "S"
           },
           {
-            "AttributeName" : "name",
-            "AttributeType" : "S"
-          }
-        ],
-        "ProvisionedThroughput" : {
-          "ReadCapacityUnits" : "5",
-          "WriteCapacityUnits" : "5"
-        }
-      }
-    },
-    "ClassicPetite32" : {
-      "Type" : "AWS::DynamoDB::Table",
-      "Properties" : {
-        "TableName" : "ClassicPetite32",
-        "KeySchema" : [
-          {
-            "AttributeName" : "id",
-            "KeyType" : "HASH"
-          },
-          {
-            "AttributeName" : "name",
-            "KeyType" : "RANGE"
-          }
-        ],
-        "AttributeDefinitions" : [
-          {
-            "AttributeName" : "id",
-            "AttributeType" : "S"
-          },
-          {
-            "AttributeName" : "name",
-            "AttributeType" : "S"
-          }
-        ],
-        "ProvisionedThroughput" : {
-          "ReadCapacityUnits" : "5",
-          "WriteCapacityUnits" : "5"
-        }
-      }
-    },
-    "Dapper38" : {
-      "Type" : "AWS::DynamoDB::Table",
-      "Properties" : {
-        "TableName" : "Dapper38",
-        "KeySchema" : [
-          {
-            "AttributeName" : "id",
-            "KeyType" : "HASH"
-          },
-          {
-            "AttributeName" : "name",
-            "KeyType" : "RANGE"
-          }
-        ],
-        "AttributeDefinitions" : [
-          {
-            "AttributeName" : "id",
-            "AttributeType" : "S"
-          },
-          {
-            "AttributeName" : "name",
+            "AttributeName" : "collection",
             "AttributeType" : "S"
           }
         ],

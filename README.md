@@ -55,3 +55,4 @@ PS: If you get any error regarding access, please check your IAM policies.
 10. Alias for Lambdas
 11. Error Handler in `deploy.sh`
 12. Swagger integration
+13. Table Name in Lambda should be from environment variable.

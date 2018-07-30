@@ -1,19 +1,19 @@
 const fs = require('fs');
 const AWS = require('aws-sdk');
 const sampleInputData = require('../data/products.json');
+const uuidv1 = require('uuid/v1');
+
+const AWS_REGION = process.argv[2];
+const TABLE_NAME = process.argv[3];
 
 AWS.config.update({
-    region: process.argv[2]
+    region: AWS_REGION
 });
 
 feedDataToDynamoDBFromSampleData(sampleInputData);
 
 function getTableName(collectionName, size) {
-    if(!collectionName || !size) {
-        return new Error("CollectionName or Size missing!");
-    }
-    return (collectionName.charAt(0).toUpperCase() + collectionName.slice(1))
-            .replace(/(\-\w)/g, function(m){return m[1].toUpperCase();}) + size
+    return TABLE_NAME;
 }
 
 function feedDataToDynamoDBFromSampleData(sampleData) {
@@ -22,14 +22,16 @@ function feedDataToDynamoDBFromSampleData(sampleData) {
     }
 
     const DocumentClient = new AWS.DynamoDB.DocumentClient();
-    sampleData.forEach((collectionData, collectionIndex) => {
+    sampleData.forEach((collectionData) => {
         const TABLE_NAME = getTableName(collectionData.collection, collectionData.size);
 
-        collectionData.products.forEach((product, productIndex) => {
+        collectionData.products.forEach((product) => {
             const productDocument = {
                 TableName: TABLE_NAME,
                 Item: {
-                    id: (collectionIndex + 1) + "-" + (productIndex + 1),
+                    id: uuidv1(),
+                    collection: collectionData.collection,
+                    size: collectionData.size,
                     image: product.image,
                     name: product.name,
                     sku: product.sku

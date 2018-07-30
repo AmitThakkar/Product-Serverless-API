@@ -71,6 +71,42 @@
         "Runtime" : "nodejs8.10"
       }
     },
+    "ListProductLambda": {
+      "Type" : "AWS::Lambda::Function",
+      "Properties" : {
+        "Code" : {
+          "S3Bucket": {"Ref": "S3BucketName"},
+          "S3Key": {"Ref": "S3BucketKey"}
+        },
+        "Description" : "This Lambda Function returns List Of Collection",
+        "Handler" : "src/api/product/list-product.handler",
+        "Role" :  {
+          "Fn::GetAtt": [
+            "ProductLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "Runtime" : "nodejs8.10"
+      }
+    },
+    "GetProductLambda": {
+      "Type" : "AWS::Lambda::Function",
+      "Properties" : {
+        "Code" : {
+          "S3Bucket": {"Ref": "S3BucketName"},
+          "S3Key": {"Ref": "S3BucketKey"}
+        },
+        "Description" : "This Lambda Function returns List Of Collection",
+        "Handler" : "src/api/product/get-product.handler",
+        "Role" :  {
+          "Fn::GetAtt": [
+            "ProductLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "Runtime" : "nodejs8.10"
+      }
+    },
     "ProductAPI": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {

@@ -28,16 +28,30 @@ This is a serverless sample application for Product Collection API. I am using A
 5. Make sure you have access to your AWS Account, if not you can configure credentials by running `aws configure`.
 6. Run deploy.sh as:
 
-    `./deploy.sh`
+    `./deploy.sh eu-west-2`
 
 That it. 
 
 > Take rest and watch logs. This process is completely transparent so whatever `deploy.sh` and `cloudformation` will do
 will put into logs on console.
 
+PS: If you get any error regarding access, please check your IAM policies.
+
 ## How To Test?
 
 
 > If you find any challenge/issue please let me know at vigildbest@gmail.com.
 
-PS: This stack will be created into AWS `eu-west-2` region.
+## Improvement
+1. AWS Lambda role access policies can be improve.
+2. DLQ Implementation for Lambda.
+3. Encryption for source code.
+4. DynamoDB Global Secondary Indexes should be implemented.
+5. Read/Write Throughput for dynamoDB tables.
+6. Better Argument Handling in `deploy.sh`
+7. Better Argument Handling in `feed-sample-data.js`
+8. APIGateway Implementation
+9. Alarming on Lambdas
+10. Alias for Lambdas
+11. Error Handler in `deploy.sh`
+12. Swagger integration

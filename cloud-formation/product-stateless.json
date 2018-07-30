@@ -1,0 +1,188 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Parameters": {
+    "S3BucketName": {
+      "Type": "String",
+      "Description": "Bucket Name for Lambda Code"
+    },
+    "S3BucketKey": {
+      "Type": "String",
+      "Description": "Bucket Key for Lambda Code"
+    }
+  },
+  "Resources" : {
+    "ProductLambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": "product-lambda-execution-role",
+        "Path": "/",
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ProductUpdateLogsPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "product-lambda-execution-role-policy",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "logs:*",
+                "dynamodb:*"
+              ],
+              "Resource": "*"
+            }
+          ]
+        },
+        "Roles": [
+          {
+            "Ref": "ProductLambdaExecutionRole"
+          }
+        ]
+      }
+    },
+    "ListCollectionLambda": {
+      "Type" : "AWS::Lambda::Function",
+      "Properties" : {
+        "Code" : {
+          "S3Bucket": {"Ref": "S3BucketName"},
+          "S3Key": {"Ref": "S3BucketKey"}
+        },
+        "Description" : "This Lambda Function returns List Of Collection",
+        "Handler" : "src/api/collection/list-collection.handler",
+        "Role" :  {
+          "Fn::GetAtt": [
+            "ProductLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "Runtime" : "nodejs8.10"
+      }
+    },
+    "ProductAPI": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "ProductAPI",
+        "Description": "API used for Product",
+        "FailOnWarnings" : true
+      }
+    },
+    "CollectionResource": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "RestApiId": {"Ref": "ProductAPI"},
+        "ParentId": {"Fn::GetAtt": ["ProductAPI", "RootResourceId"]},
+        "PathPart": "collections"
+      }
+    },
+    "ListCollectionsRequest": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "ResourceId": {"Ref": "CollectionResource"},
+        "RestApiId": {"Ref": "ProductAPI"},
+        "OperationName": "ListCollections",
+        "MethodResponses": [{
+          "StatusCode": 200
+        }],
+        "Integration": {
+          "Type": "AWS",
+          "IntegrationHttpMethod": "POST",
+          "Uri": {"Fn::Join" : ["",
+            ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["ListCollectionLambda", "Arn"]}, "/invocations"]
+          ]},
+          "IntegrationResponses": [{
+            "StatusCode": 200
+          }],
+          "RequestTemplates": {
+            "application/json": {"Fn::Join" : ["", [
+              "{",
+              "\"name\": \"$input.params('name')\"",
+              "}"
+            ]]}
+          }
+        }
+      }
+    },
+    "ListCollectionLambdaInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:invokeFunction",
+        "FunctionName": {"Fn::GetAtt": ["ListCollectionLambda", "Arn"]},
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": ["",
+            [
+              "arn:aws:execute-api:",
+              {"Ref": "AWS::Region"},
+              ":",
+              {"Ref": "AWS::AccountId"},
+              ":",
+              {"Ref": "ProductAPI"},
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "ApiGatewayCloudWatchLogsRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [{
+            "Effect": "Allow",
+            "Principal": { "Service": ["apigateway.amazonaws.com"] },
+            "Action": ["sts:AssumeRole"]
+          }]
+        },
+        "Policies": [{
+          "PolicyName": "ApiGatewayLogsPolicy",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [{
+              "Effect": "Allow",
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:DescribeLogGroups",
+                "logs:DescribeLogStreams",
+                "logs:PutLogEvents",
+                "logs:GetLogEvents",
+                "logs:FilterLogEvents"
+              ],
+              "Resource": "*"
+            }]
+          }
+        }]
+      }
+    },
+    "ApiGatewayAccount": {
+      "Type" : "AWS::ApiGateway::Account",
+      "Properties" : {
+        "CloudWatchRoleArn" : {"Fn::GetAtt" : ["ApiGatewayCloudWatchLogsRole", "Arn"] }
+      }
+    },
+    "ApiDeployment": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "DependsOn": ["ListCollectionsRequest"],
+      "Properties": {
+        "RestApiId": {"Ref": "ProductAPI"},
+        "StageName": "DevStage"
+      }
+    }
+  }
+}

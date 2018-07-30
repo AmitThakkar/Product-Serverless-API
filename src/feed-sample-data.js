@@ -3,7 +3,7 @@ const AWS = require('aws-sdk');
 const sampleInputData = require('../data/products.json');
 
 AWS.config.update({
-    region: "eu-west-2"
+    region: process.argv[2]
 });
 
 feedDataToDynamoDBFromSampleData(sampleInputData);

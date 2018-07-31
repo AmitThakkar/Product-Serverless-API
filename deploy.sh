@@ -2,7 +2,7 @@
 
 AWS_REGION=$1
 LAMBDA_SRC_BUCKET_NAME="product-serverless-src"
-ZIP_FILE_NAME="product-api.zip"
+ZIP_FILE_NAME="product-api-$(date --utc +%Y-%m-%dT%H-%M-%SZ).zip"
 LAMBDA_SRC_BUCKET_KEY="src/${ZIP_FILE_NAME}"
 TABLE_NAME="Product"
 

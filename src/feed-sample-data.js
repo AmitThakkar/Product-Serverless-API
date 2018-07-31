@@ -30,10 +30,10 @@ function feedDataToDynamoDBFromSampleData(sampleData) {
                 TableName: TABLE_NAME,
                 Item: {
                     id: uuidv1(),
-                    collection: collectionData.collection,
+                    collection_name: collectionData.collection,
                     size: collectionData.size,
                     image: product.image,
-                    name: product.name,
+                    product_name: product.name,
                     sku: product.sku
                 }
             };

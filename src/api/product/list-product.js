@@ -6,7 +6,16 @@ exports.handler = function(event, context, callback) {
         TableName : process.env.TableName,
     };
 
-
+    if(true) {
+        params.FilterExpression = "#size = :size";
+        params.ExpressionAttributeNames = {
+            "#size": "size"
+        };
+        params.ExpressionAttributeValues = {
+            ":size": 28
+        };
+        params.ProjectionExpression = "id, product_name"
+    }
 
     DocumentClient.scan(params, function(err, data) {
        if(err) callback(err);

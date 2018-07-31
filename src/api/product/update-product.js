@@ -6,7 +6,7 @@ exports.handler = function(event, context, callback) {
     const params = {
         TableName : process.env.TableName,
         Item:{
-            "id": uuidv1(),
+            "id": event.id,
             "size": event.size,
             "collection_name": event.collection_name,
             "product_name": event.product_name,

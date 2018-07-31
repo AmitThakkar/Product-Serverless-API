@@ -3,7 +3,7 @@ const DocumentClient = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = function(event, context, callback) {
     const params = {
-        TableName : process.env.TableName,
+        TableName : process.env.TableName
     };
 
     const Size = event.size;

@@ -33,7 +33,7 @@
         }
       }
     },
-    "ProductUpdateLogsPolicy": {
+    "ProductLambdaExecutionRolePolicy": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
         "PolicyName": "product-lambda-execution-role-policy",
@@ -57,6 +57,7 @@
         ]
       }
     },
+
     "ListCollectionLambda": {
       "Type" : "AWS::Lambda::Function",
       "Properties" : {
@@ -82,7 +83,7 @@
           "S3Bucket": {"Ref": "S3BucketName"},
           "S3Key": {"Ref": "S3BucketKey"}
         },
-        "Description" : "This Lambda Function returns List Of Collection",
+        "Description" : "This Lambda Function returns List Of Product By Collection",
         "Handler" : "src/api/collection/list-product-by-collection-name.handler",
         "Role" :  {
           "Fn::GetAtt": [
@@ -128,7 +129,7 @@
           "S3Bucket": {"Ref": "S3BucketName"},
           "S3Key": {"Ref": "S3BucketKey"}
         },
-        "Description" : "This Lambda Function returns List Of Collection",
+        "Description" : "This Lambda Function gets a Product",
         "Handler" : "src/api/product/get-product.handler",
         "Role" :  {
           "Fn::GetAtt": [
@@ -144,6 +145,30 @@
         "Runtime" : "nodejs8.10"
       }
     },
+    "AddProductLambda": {
+      "Type" : "AWS::Lambda::Function",
+      "Properties" : {
+        "Code" : {
+          "S3Bucket": {"Ref": "S3BucketName"},
+          "S3Key": {"Ref": "S3BucketKey"}
+        },
+        "Description" : "This Lambda Function adds Product",
+        "Handler" : "src/api/product/add-product.handler",
+        "Role" :  {
+          "Fn::GetAtt": [
+            "ProductLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables":  {
+            "TableName": {"Ref": "TableName"}
+          }
+        },
+        "Runtime" : "nodejs8.10"
+      }
+    },
+
     "ProductAPI": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
@@ -152,6 +177,7 @@
         "FailOnWarnings" : true
       }
     },
+
     "ProductResource": {
       "Type": "AWS::ApiGateway::Resource",
       "Properties": {
@@ -240,6 +266,92 @@
         }
       }
     },
+
+    "AddProductsRequest": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "ResourceId": {
+          "Ref": "ProductResource"
+        },
+        "RestApiId": {
+          "Ref": "ProductAPI"
+        },
+        "OperationName": "AddProducts",
+        "MethodResponses": [
+          {
+            "StatusCode": 200
+          }
+        ],
+        "Integration": {
+          "Type": "AWS",
+          "IntegrationHttpMethod": "POST",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "AddProductLambda",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": 200
+            }
+          ],
+          "RequestTemplates": {
+            "application/json": {
+              "Fn::Join": [
+                "",
+                [
+                  "{",
+                        "\"size\": $input.json('size'),",
+                        "\"collection_name\": $input.json('collection_name'),",
+                        "\"product_name\": $input.json('product_name'),",
+                        "\"image\": $input.json('image'),",
+                        "\"sku\": $input.json('sku')",
+                  "}"
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "AddProductLambdaInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:invokeFunction",
+        "FunctionName": {"Fn::GetAtt": ["AddProductLambda", "Arn"]},
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": ["",
+            [
+              "arn:aws:execute-api:",
+              {"Ref": "AWS::Region"},
+              ":",
+              {"Ref": "AWS::AccountId"},
+              ":",
+              {"Ref": "ProductAPI"},
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+
     "CollectionResource": {
       "Type": "AWS::ApiGateway::Resource",
       "Properties": {
@@ -292,6 +404,7 @@
         }
       }
     },
+
     "ProductCollectionResource": {
       "Type": "AWS::ApiGateway::Resource",
       "Properties": {
@@ -351,6 +464,7 @@
         }
       }
     },
+
     "ApiGatewayCloudWatchLogsRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {

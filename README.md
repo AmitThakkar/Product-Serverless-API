@@ -58,3 +58,4 @@ PS: If you get any error regarding access, please check your IAM policies.
 13. GetItem response is in schema format.
 14. S3 Bucket cleanup
 15. Delete Stack script(should empty s3 bucket first.)
+16. Empty String handling while adding product.

@@ -6,13 +6,14 @@ exports.handler = function(event, context, callback) {
         TableName : process.env.TableName,
     };
 
-    if(true) {
+    const Size = event.size;
+    if(Size) {
         params.FilterExpression = "#size = :size";
         params.ExpressionAttributeNames = {
             "#size": "size"
         };
         params.ExpressionAttributeValues = {
-            ":size": 28
+            ":size": parseInt(Size)
         };
         params.ProjectionExpression = "id, product_name"
     }

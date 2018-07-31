@@ -152,6 +152,94 @@
         "FailOnWarnings" : true
       }
     },
+    "ProductResource": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "RestApiId": {"Ref": "ProductAPI"},
+        "ParentId": {"Fn::GetAtt": ["ProductAPI", "RootResourceId"]},
+        "PathPart": "products"
+      }
+    },
+    "ListProductsRequest": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Ref": "ProductResource"
+        },
+        "RestApiId": {
+          "Ref": "ProductAPI"
+        },
+        "OperationName": "ListProducts",
+        "MethodResponses": [
+          {
+            "StatusCode": 200
+          }
+        ],
+        "Integration": {
+          "Type": "AWS",
+          "IntegrationHttpMethod": "POST",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "ListProductLambda",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": 200
+            }
+          ],
+          "RequestTemplates": {
+            "application/json": {
+              "Fn::Join": [
+                "",
+                [
+                  "{",
+                  "\"size\": \"$input.params('size')\"",
+                  "}"
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "ListProductLambdaInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:invokeFunction",
+        "FunctionName": {"Fn::GetAtt": ["ListProductLambda", "Arn"]},
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": ["",
+            [
+              "arn:aws:execute-api:",
+              {"Ref": "AWS::Region"},
+              ":",
+              {"Ref": "AWS::AccountId"},
+              ":",
+              {"Ref": "ProductAPI"},
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
     "CollectionResource": {
       "Type": "AWS::ApiGateway::Resource",
       "Properties": {

@@ -25,19 +25,11 @@
           {
             "AttributeName" : "id",
             "KeyType" : "HASH"
-          },
-          {
-            "AttributeName" : "collection",
-            "KeyType" : "RANGE"
           }
         ],
         "AttributeDefinitions" : [
           {
             "AttributeName" : "id",
-            "AttributeType" : "S"
-          },
-          {
-            "AttributeName" : "collection",
             "AttributeType" : "S"
           }
         ],

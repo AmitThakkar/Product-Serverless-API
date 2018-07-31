@@ -12,7 +12,9 @@ aws cloudformation deploy \
     --region ${AWS_REGION} \
     --stack-name product-stateful \
     --template-file ./cloud-formation/product-stateful.json \
-    --parameter-overrides S3BucketName=${LAMBDA_SRC_BUCKET_NAME} TableName=${TABLE_NAME}\
+    --parameter-overrides \
+        S3BucketName=${LAMBDA_SRC_BUCKET_NAME} \
+        TableName=${TABLE_NAME}\
     --tags ApplicationName=ProductionServerless SampleApplication=FeelFreeToDeleteMe
 
 echo "Zipping the source code ..."
@@ -30,7 +32,10 @@ aws cloudformation deploy \
     --region ${AWS_REGION} \
     --stack-name product-stateless \
     --template-file ./cloud-formation/product-stateless.json \
-    --parameter-overrides S3BucketName=${LAMBDA_SRC_BUCKET_NAME} S3BucketKey=${LAMBDA_SRC_BUCKET_KEY}\
+    --parameter-overrides \
+        S3BucketName=${LAMBDA_SRC_BUCKET_NAME} \
+        S3BucketKey=${LAMBDA_SRC_BUCKET_KEY} \
+        TableName=${TABLE_NAME}\
     --capabilities CAPABILITY_NAMED_IAM \
     --tags ApplicationName=ProductionServerless SampleApplication=FeelFreeToDeleteMe
 

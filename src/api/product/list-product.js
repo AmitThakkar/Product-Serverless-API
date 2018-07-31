@@ -3,8 +3,10 @@ const DocumentClient = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = function(event, context, callback) {
     const params = {
-        TableName : "Product",
+        TableName : process.env.TableName,
     };
+
+
 
     DocumentClient.scan(params, function(err, data) {
        if(err) callback(err);

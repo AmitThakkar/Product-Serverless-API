@@ -8,6 +8,10 @@
     "S3BucketKey": {
       "Type": "String",
       "Description": "Bucket Key for Lambda Code"
+    },
+    "TableName": {
+      "Type": "String",
+      "Description": "Table Name for DyanmoDB Table"
     }
   },
   "Resources" : {
@@ -86,6 +90,11 @@
             "Arn"
           ]
         },
+        "Environment": {
+          "Variables":  {
+            "TableName": {"Ref": "TableName"}
+          }
+        },
         "Runtime" : "nodejs8.10"
       }
     },
@@ -103,6 +112,11 @@
             "ProductLambdaExecutionRole",
             "Arn"
           ]
+        },
+        "Environment": {
+          "Variables":  {
+            "TableName": {"Ref": "TableName"}
+          }
         },
         "Runtime" : "nodejs8.10"
       }

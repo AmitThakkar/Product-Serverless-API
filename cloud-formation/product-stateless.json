@@ -235,7 +235,7 @@
           "RequestTemplates": {
             "application/json": {"Fn::Join" : ["", [
               "{",
-              "\"name\": \"$input.params('name')\"",
+              "\"collection_name\": \"$input.params('collection_name')\"",
               "}"
             ]]}
           }

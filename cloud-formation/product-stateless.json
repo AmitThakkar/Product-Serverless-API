@@ -75,6 +75,29 @@
         "Runtime" : "nodejs8.10"
       }
     },
+    "ListProductByCollectionLambda": {
+      "Type" : "AWS::Lambda::Function",
+      "Properties" : {
+        "Code" : {
+          "S3Bucket": {"Ref": "S3BucketName"},
+          "S3Key": {"Ref": "S3BucketKey"}
+        },
+        "Description" : "This Lambda Function returns List Of Collection",
+        "Handler" : "src/api/collection/list-product-by-collection-name.handler",
+        "Role" :  {
+          "Fn::GetAtt": [
+            "ProductLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables":  {
+            "TableName": {"Ref": "TableName"}
+          }
+        },
+        "Runtime" : "nodejs8.10"
+      }
+    },
     "ListProductLambda": {
       "Type" : "AWS::Lambda::Function",
       "Properties" : {
@@ -156,6 +179,58 @@
           ]},
           "IntegrationResponses": [{
             "StatusCode": 200
+          }]
+        }
+      }
+    },
+    "ListCollectionLambdaInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:invokeFunction",
+        "FunctionName": {"Fn::GetAtt": ["ListCollectionLambda", "Arn"]},
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": ["",
+            [
+              "arn:aws:execute-api:",
+              {"Ref": "AWS::Region"},
+              ":",
+              {"Ref": "AWS::AccountId"},
+              ":",
+              {"Ref": "ProductAPI"},
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "ProductCollectionResource": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "RestApiId": {"Ref": "ProductAPI"},
+        "ParentId": {"Ref": "CollectionResource"},
+        "PathPart": "products"
+      }
+    },
+    "ListProductByCollectionsRequest": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "ResourceId": {"Ref": "ProductCollectionResource"},
+        "RestApiId": {"Ref": "ProductAPI"},
+        "OperationName": "ListProductByCollection",
+        "MethodResponses": [{
+          "StatusCode": 200
+        }],
+        "Integration": {
+          "Type": "AWS",
+          "IntegrationHttpMethod": "POST",
+          "Uri": {"Fn::Join" : ["",
+            ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["ListProductByCollectionLambda", "Arn"]}, "/invocations"]
+          ]},
+          "IntegrationResponses": [{
+            "StatusCode": 200
           }],
           "RequestTemplates": {
             "application/json": {"Fn::Join" : ["", [
@@ -167,11 +242,11 @@
         }
       }
     },
-    "ListCollectionLambdaInvokePermission": {
+    "ListProductByCollectionLambdaInvokePermission": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "Action": "lambda:invokeFunction",
-        "FunctionName": {"Fn::GetAtt": ["ListCollectionLambda", "Arn"]},
+        "FunctionName": {"Fn::GetAtt": ["ListProductByCollectionLambda", "Arn"]},
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
           "Fn::Join": ["",

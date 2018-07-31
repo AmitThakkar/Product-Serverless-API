@@ -1,17 +1,15 @@
 const AWS = require('aws-sdk');
-const dynamoDB = new AWS.DynamoDB();
+const DocumentClient = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = function(event, context, callback) {
     const params = {
         TableName : process.env.TableName,
         Key: {
-            "id": {
-                "S": "4ad67310-949b-11e8-9bb2-0506917f3e9c"
-            }
+            "id": event.id
         }
     };
 
-    dynamoDB.getItem(params, function(err, data) {
+    DocumentClient.get(params, function(err, data) {
         if(err) callback(err);
         else callback(undefined, data.Item);
     });

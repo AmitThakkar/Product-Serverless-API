@@ -59,3 +59,4 @@ PS: If you get any error regarding access, please check your IAM policies.
 14. S3 Bucket cleanup
 15. Delete Stack script(should empty s3 bucket first.)
 16. Empty String handling while adding product.
+17. Authorization.

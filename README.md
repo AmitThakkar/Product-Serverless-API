@@ -10,7 +10,7 @@ This is a serverless sample application for Product Collection API. I am using A
 
 ## Why these tools?
 1. Git: I am using Git to version control of source code.
-2. AWS-CLI: I am creating serverless application and for this I am using AWS as Cloud Provider.
+2. AWS-CLI: I am creating a serverless application and for this, I am using AWS as Cloud Provider.
 3. NodeJS: I am writing AWS Lambda functions in NodeJS.
 4. Zip Tool: I need this tool to zip source code before uploading to S3.
 
@@ -33,18 +33,18 @@ This is a serverless sample application for Product Collection API. I am using A
 That it. 
 
 > Take rest and watch logs. This process is completely transparent so whatever `deploy.sh` and `cloudformation` will do
-will put into logs on console.
+will put into logs on the console.
 
 PS: If you get any error regarding access, please check your IAM policies.
 
 ## How To Test?
 
-Login into AWS Console, go to API Gateway service and you will find all the apis in **London** region under ProductionAPI.
+Login into AWS Console, go to the API Gateway service and you will find all the APIs in **London** region under ProductionAPI.
 
 > If you find any challenge/issue please let me know at vigildbest@gmail.com.
 
 ### TODO: Improvement
-1. AWS Lambda role access policies can be improve.
+1. AWS Lambda role access policies can be improved.
 2. DLQ Implementation for Lambda.
 3. Encryption for source code.
 4. DynamoDB Global Secondary Indexes should be implemented.

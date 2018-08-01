@@ -531,6 +531,11 @@
             "Arn"
           ]
         },
+        "Environment": {
+          "Variables":  {
+            "TableName": {"Ref": "TableName"}
+          }
+        },
         "Runtime" : "nodejs8.10"
       }
     },

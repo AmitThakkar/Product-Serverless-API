@@ -1,9 +1,19 @@
 const AWS = require('aws-sdk');
-const dynamodb = new AWS.DynamoDB();
+const DocumentClient = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = function(event, context, callback) {
-    dynamodb.listTables({}, (err, result) => {
+    const params = {
+        TableName : process.env.TableName
+    };
+
+    DocumentClient.scan(params, function(err, data) {
         if(err) callback(err);
-        else callback(undefined, result.TableNames);
+        else {
+            const collections = new Set();
+            data.Items.forEach((item) => {
+                collections.add(item.collection_name);
+            });
+            callback(undefined, Array.from(collections));
+        }
     });
 };

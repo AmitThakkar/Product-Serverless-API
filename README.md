@@ -39,10 +39,11 @@ PS: If you get any error regarding access, please check your IAM policies.
 
 ## How To Test?
 
+Login into AWS Console, go to API Gateway service and you will find all the apis in **London** region under ProductionAPI.
 
 > If you find any challenge/issue please let me know at vigildbest@gmail.com.
 
-## Improvement
+### TODO: Improvement
 1. AWS Lambda role access policies can be improve.
 2. DLQ Implementation for Lambda.
 3. Encryption for source code.
@@ -55,8 +56,8 @@ PS: If you get any error regarding access, please check your IAM policies.
 10. Alias for Lambdas
 11. Error Handler in `deploy.sh`
 12. Swagger integration
-13. GetItem response is in schema format.
-14. S3 Bucket cleanup
-15. Delete Stack script(should empty s3 bucket first.)
-16. Empty String handling while adding product.
-17. Authorization.
+13. S3 Bucket cleanup
+14. Delete Stack script(should empty s3 bucket first.)
+15. Empty String handling while adding product.
+16. Authorization.
+17. List-collection implementation.
